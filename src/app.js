@@ -9,6 +9,16 @@ const { sendContactEmail, isMailerConfigured } = require("./services/contactMail
 const app = express();
 const publicDir = path.join(__dirname, "..", "public");
 const contactAttempts = new Map();
+const assetRoutes = {
+  showcaseCss: "/showcase-style",
+  logoIcon: "/brand/logo-icon",
+  logoDark: "/brand/logo-dark",
+  logoLight: "/brand/logo-light",
+  designs: "/designs",
+  conceptClassic: "/concepts/classic",
+  conceptDark: "/concepts/dark",
+  conceptEditorial: "/concepts/editorial"
+};
 
 const CONTACT_RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const CONTACT_RATE_LIMIT_MAX = 5;
@@ -63,6 +73,13 @@ function getBaseUrl(req) {
   return `${proto}://${req.get("host")}`;
 }
 
+function sendPublicFile(res, relativePath, contentType) {
+  if (contentType) {
+    res.type(contentType);
+  }
+  res.sendFile(path.join(publicDir, relativePath));
+}
+
 app.get("/", (req, res) => {
   const baseUrl = getBaseUrl(req);
   const canonicalUrl = `${baseUrl}/`;
@@ -82,6 +99,7 @@ app.get("/", (req, res) => {
 
   res.render("index", {
     siteData,
+    assetRoutes,
     year: new Date().getFullYear(),
     baseUrl,
     canonicalUrl,
@@ -95,11 +113,58 @@ app.get("/index.html", (req, res) => {
 });
 
 app.get("/designs", (req, res) => {
-  res.redirect(302, "/design-selector.html");
+  sendPublicFile(res, "design-selector.html", "text/html");
+});
+
+app.get("/design-selector.html", (req, res) => {
+  res.redirect(301, assetRoutes.designs);
+});
+
+app.get(assetRoutes.conceptClassic, (req, res) => {
+  sendPublicFile(res, path.join("concepts", "classic-premium.html"), "text/html");
+});
+
+app.get("/concepts/classic-premium.html", (req, res) => {
+  res.redirect(301, assetRoutes.conceptClassic);
+});
+
+app.get(assetRoutes.conceptDark, (req, res) => {
+  sendPublicFile(res, path.join("concepts", "dark-product.html"), "text/html");
+});
+
+app.get("/concepts/dark-product.html", (req, res) => {
+  res.redirect(301, assetRoutes.conceptDark);
+});
+
+app.get(assetRoutes.conceptEditorial, (req, res) => {
+  sendPublicFile(res, path.join("concepts", "editorial-personal.html"), "text/html");
+});
+
+app.get("/concepts/editorial-personal.html", (req, res) => {
+  res.redirect(301, assetRoutes.conceptEditorial);
+});
+
+app.get(assetRoutes.showcaseCss, (req, res) => {
+  sendPublicFile(res, path.join("css", "showcase.css"), "text/css");
+});
+
+app.get(assetRoutes.logoIcon, (req, res) => {
+  sendPublicFile(res, path.join("assests", "logo-v3-premium-icon.png"), "image/png");
+});
+
+app.get(assetRoutes.logoDark, (req, res) => {
+  sendPublicFile(res, path.join("assests", "logo-v3-premium-dark.png"), "image/png");
+});
+
+app.get(assetRoutes.logoLight, (req, res) => {
+  sendPublicFile(res, path.join("assests", "logo-v3-premium-light.png"), "image/png");
 });
 
 app.get("/api/profile", (req, res) => {
-  res.json(siteData);
+  res.json({
+    ...siteData,
+    assetRoutes
+  });
 });
 
 app.post("/contact", async (req, res) => {

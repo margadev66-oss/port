@@ -2,8 +2,8 @@ const siteData = {
   brand: {
     name: "Debajit Shil",
     role: "Student Developer",
-    logoIconPath: "/assests/logo-v3-premium-icon.png",
-    logoWidePath: "/assests/logo-v3-premium-dark.png"
+    logoIconPath: "/brand/logo-icon",
+    logoWidePath: "/brand/logo-dark"
   },
   seo: {
     title: "Debajit Shil | Student Developer",
@@ -11,7 +11,7 @@ const siteData = {
       "Student developer building professional websites, dashboards, and custom web applications at affordable pricing.",
     keywords:
       "student developer, web developer india, affordable website developer, custom web app developer, dashboard development, freelance web developer",
-    ogImagePath: "/assests/logo-v3-premium-light.png"
+    ogImagePath: "/brand/logo-light"
   },
   hero: {
     heading: "Professional Websites and Web Apps at Affordable Pricing",
