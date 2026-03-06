@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= siteData.seo.title %></title>
+    <meta name="description" content="<%= siteData.seo.description %>" />
+    <meta name="keywords" content="<%= siteData.seo.keywords %>" />
+    <meta name="author" content="<%= siteData.brand.name %>" />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <meta name="theme-color" content="#08173f" />
+    <link rel="canonical" href="<%= canonicalUrl %>" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<%= siteData.brand.name %>" />
+    <meta property="og:title" content="<%= siteData.seo.title %>" />
+    <meta property="og:description" content="<%= siteData.seo.description %>" />
+    <meta property="og:url" content="<%= canonicalUrl %>" />
+    <meta property="og:image" content="<%= ogImageUrl %>" />
+    <meta property="og:image:alt" content="<%= siteData.brand.name %> brand identity" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<%= siteData.seo.title %>" />
+    <meta name="twitter:description" content="<%= siteData.seo.description %>" />
+    <meta name="twitter:image" content="<%= ogImageUrl %>" />
+
+    <link rel="icon" type="image/png" href="/assests/logo-v3-premium-icon.png" />
+    <link rel="shortcut icon" href="/assests/logo-v3-premium-icon.png" />
+    <link rel="apple-touch-icon" href="/assests/logo-v3-premium-icon.png" />
+    <link rel="stylesheet" href="/css/showcase.css" />
+    <script type="application/ld+json"><%- structuredDataJson %></script>
+  </head>
+  <body class="concept-page classic home-page">
+    <header class="site-header">
+      <div class="page-wrap">
+        <a class="brand" href="#top">
+          <img src="<%= siteData.brand.logoIconPath %>" alt="<%= siteData.brand.name %> logo" />
+          <span><%= siteData.brand.name %></span>
+        </a>
+        <nav class="nav-links">
+          <a href="#services">Services</a>
+          <a href="#projects">Projects</a>
+          <a href="#process">Process</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <a class="floating-cta" href="#contact-form">Start a Project</a>
+
+    <main class="home-layout">
+      <section class="hero-fullbleed home-band" id="top">
+        <div class="hero page-wrap">
+          <div>
+            <span class="kicker"><%= siteData.brand.role %></span>
+            <h1><%= siteData.hero.heading %></h1>
+            <p class="subline"><%= siteData.hero.subline %></p>
+            <p class="lead"><%= siteData.hero.intro %></p>
+            <div class="hero-actions">
+              <a class="btn primary" href="#contact"><%= siteData.hero.primaryCtaLabel %></a>
+            </div>
+          </div>
+          <img class="hero-icon" src="<%= siteData.brand.logoIconPath %>" alt="<%= siteData.brand.name %> icon" />
+        </div>
+      </section>
+
+      <section class="home-band info-band">
+        <div class="page-wrap">
+          <div class="info-grid">
+            <% siteData.stats.forEach((stat) => { %>
+            <article class="stat-card">
+              <strong><%= stat.value %></strong>
+              <span><%= stat.label %></span>
+            </article>
+            <% }) %>
+          </div>
+        </div>
+      </section>
+
+      <section class="home-band section-band services-band" id="services">
+        <section class="section page-wrap">
+          <h2>What I Build</h2>
+          <p class="section-intro">
+            Focused on practical outcomes: polished public websites, internal management dashboards,
+            and custom web apps with clear content and admin workflows.
+          </p>
+          <div class="service-grid">
+            <% siteData.services.forEach((service, index) => { %>
+            <article class="card service-card <%= index === 0 ? 'service-card-featured' : '' %>">
+              <h3><%= service.title %></h3>
+              <p><%= service.description %></p>
+            </article>
+            <% }) %>
+          </div>
+        </section>
+      </section>
+
+      <section class="home-band section-band projects-band" id="projects">
+        <section class="section page-wrap">
+          <h2>Selected Projects</h2>
+          <p class="section-intro">
+            Two examples that show both brand-facing design and operational web-app development.
+          </p>
+          <div class="project-grid">
+            <% siteData.projects.forEach((project, index) => { %>
+            <article class="card project-card project-card-detail <%= index % 2 === 1 ? 'project-card-reverse' : '' %>">
+              <div>
+                <h3>
+                  <a href="<%= project.url %>" target="_blank" rel="noopener noreferrer"><%= project.name %></a>
+                </h3>
+                <p><%= project.summary %></p>
+              </div>
+              <div class="project-detail-side">
+                <div class="meta">
+                  <% project.tags.forEach((tag) => { %>
+                  <span><%= tag %></span>
+                  <% }) %>
+                </div>
+                <a class="btn secondary" href="<%= project.url %>" target="_blank" rel="noopener noreferrer">Visit Live Project</a>
+              </div>
+            </article>
+            <% }) %>
+          </div>
+        </section>
+      </section>
+
+      <section class="home-band section-band process-band" id="process">
+        <section class="section page-wrap">
+          <h2>How I Work</h2>
+          <p class="section-intro">
+            A simple process built around clarity, speed, and predictable delivery.
+          </p>
+          <div class="process-grid">
+            <% siteData.processSteps.forEach((process, index) => { %>
+            <article class="card process-step <%= index % 2 === 1 ? 'process-offset' : '' %>">
+              <strong><%= process.step %></strong>
+              <h4><%= process.title %></h4>
+              <p><%= process.description %></p>
+            </article>
+            <% }) %>
+          </div>
+        </section>
+      </section>
+
+      <section class="home-band cta-section" id="contact">
+        <div class="page-wrap">
+          <section class="cta-band">
+            <div class="cta-copy">
+              <span class="kicker">Let's Build Something Useful</span>
+              <h3><%= siteData.contact.ctaTitle %></h3>
+              <p><%= siteData.contact.ctaText %></p>
+              <div class="contact-links">
+                <p class="contact-direct">Email: <a href="mailto:<%= siteData.contact.email %>"><%= siteData.contact.email %></a></p>
+                <p class="contact-direct">Phone / WhatsApp: <a href="tel:+918697378521"><%= siteData.contact.phone %></a></p>
+                <p class="contact-direct">Fiverr: <a href="<%= siteData.contact.fiverrUrl %>" target="_blank" rel="noopener noreferrer"><%= siteData.contact.fiverrUsername %></a></p>
+              </div>
+            </div>
+            <form class="contact-form" id="contact-form" method="post" action="/contact" novalidate>
+              <div class="form-grid">
+                <label>
+                  <span>Name</span>
+                  <input type="text" name="name" autocomplete="name" required />
+                </label>
+                <label>
+                  <span>Email</span>
+                  <input type="email" name="email" autocomplete="email" required />
+                </label>
+              </div>
+              <div class="form-grid">
+                <label>
+                  <span>Project Type</span>
+                  <input type="text" name="projectType" placeholder="Website / Dashboard / Web App" required />
+                </label>
+                <label>
+                  <span>Budget (Optional)</span>
+                  <input type="text" name="budget" placeholder="INR 40k - 80k" />
+                </label>
+              </div>
+              <label>
+                <span>Timeline (Optional)</span>
+                <input type="text" name="timeline" placeholder="2-4 weeks" />
+              </label>
+              <label>
+                <span>Project Brief</span>
+                <textarea name="message" rows="5" placeholder="Share your goals, pages/features, and deadlines." required></textarea>
+              </label>
+              <label class="hp-field" aria-hidden="true">
+                <span>Website</span>
+                <input type="text" name="website" tabindex="-1" autocomplete="off" />
+              </label>
+              <button class="btn primary" type="submit"><%= siteData.contact.ctaLabel %></button>
+              <p class="form-status" id="form-status" aria-live="polite"></p>
+            </form>
+          </section>
+        </div>
+      </section>
+
+      <section class="home-band footer-band">
+        <div class="page-wrap">
+          <p class="footer-note"><%= siteData.brand.name %> - <%= siteData.brand.role %> Portfolio - <%= year %></p>
+        </div>
+      </section>
+    </main>
+    <script>
+      (() => {
+        const form = document.getElementById("contact-form");
+        const statusEl = document.getElementById("form-status");
+        if (!form || !statusEl) return;
+
+        const setStatus = (text, type) => {
+          statusEl.textContent = text;
+          statusEl.className = `form-status ${type || ""}`.trim();
+        };
+
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const submitButton = form.querySelector('button[type="submit"]');
+          const formData = new FormData(form);
+          const payload = Object.fromEntries(formData.entries());
+
+          setStatus("Sending your request...", "pending");
+          submitButton.disabled = true;
+
+          try {
+            const response = await fetch("/contact", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json"
+              },
+              body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            if (!response.ok || !data.ok) {
+              throw new Error(data.error || "Failed to send message.");
+            }
+
+            form.reset();
+            setStatus("Thanks. Your message was sent successfully.", "success");
+          } catch (error) {
+            setStatus(error.message || "Could not send message right now.", "error");
+          } finally {
+            submitButton.disabled = false;
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
