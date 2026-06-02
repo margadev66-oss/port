@@ -7,22 +7,49 @@
     <meta name="description" content="<%= siteData.seo.description %>" />
     <meta name="keywords" content="<%= siteData.seo.keywords %>" />
     <meta name="author" content="<%= siteData.brand.name %>" />
+    <meta name="google-adsense-account" content="ca-pub-6071860223332114" />
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
-    <meta name="theme-color" content="#08173f" />
+    <meta name="googlebot" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="#07101d" />
     <link rel="canonical" href="<%= canonicalUrl %>" />
+    <link rel="alternate" hreflang="en-IN" href="<%= canonicalUrl %>" />
+    <link rel="alternate" hreflang="x-default" href="<%= canonicalUrl %>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="<%= siteData.brand.name %>" />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:site_name" content="<%= siteData.seo.siteName %>" />
     <meta property="og:title" content="<%= siteData.seo.title %>" />
     <meta property="og:description" content="<%= siteData.seo.description %>" />
     <meta property="og:url" content="<%= canonicalUrl %>" />
     <meta property="og:image" content="<%= ogImageUrl %>" />
+    <meta property="og:image:secure_url" content="<%= ogImageUrl %>" />
+    <meta property="og:image:width" content="1600" />
+    <meta property="og:image:height" content="520" />
     <meta property="og:image:alt" content="<%= siteData.brand.name %> brand identity" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="<%= siteData.seo.title %>" />
     <meta name="twitter:description" content="<%= siteData.seo.description %>" />
     <meta name="twitter:image" content="<%= ogImageUrl %>" />
+    <meta name="twitter:image:alt" content="<%= siteData.brand.name %> brand identity" />
+
+    <script>
+      (() => {
+        const storedTheme = window.localStorage.getItem("student-dev-theme");
+        const preferredTheme =
+          storedTheme ||
+          (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+        document.documentElement.dataset.theme = preferredTheme;
+      })();
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6071860223332114"
+      crossorigin="anonymous"
+    ></script>
 
     <link rel="icon" type="image/png" href="<%= assetRoutes.logoIcon %>" />
     <link rel="shortcut icon" href="<%= assetRoutes.logoIcon %>" />
@@ -30,132 +57,223 @@
     <link rel="stylesheet" href="<%= assetRoutes.showcaseCss %>" />
     <script type="application/ld+json"><%- structuredDataJson %></script>
   </head>
-  <body class="concept-page classic home-page">
+  <body class="portfolio-page is-loading">
+    <div class="site-loader" id="site-loader" aria-hidden="true">
+      <div class="loader-mark">
+        <img src="<%= siteData.brand.logoIconPath %>" alt="" />
+      </div>
+      <div class="loader-copy">
+        <span>Loading Student Dev</span>
+        <div class="loader-track">
+          <span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-progress" aria-hidden="true">
+      <span id="scroll-progress-bar"></span>
+    </div>
+
     <header class="site-header">
-      <div class="page-wrap">
-        <a class="brand" href="#top">
+      <div class="page-wrap header-row">
+        <a class="brand" href="#top" aria-label="<%= siteData.brand.name %> home">
           <img src="<%= siteData.brand.logoIconPath %>" alt="<%= siteData.brand.name %> logo" />
-          <span><%= siteData.brand.name %></span>
+          <div class="brand-copy">
+            <span class="brand-name">Student Dev</span>
+            <span class="brand-role"><%= siteData.brand.name %></span>
+          </div>
         </a>
-        <nav class="nav-links">
-          <a href="#services">Services</a>
-          <a href="#projects">Projects</a>
-          <a href="#process">Process</a>
-          <a href="#contact">Contact</a>
+
+        <nav class="nav-links" id="primary-nav" aria-label="Primary">
+          <a href="#services" data-section-link>Services</a>
+          <a href="#work" data-section-link>Work</a>
+          <a href="/tools" data-page-link>Tools</a>
+          <a href="#approach" data-section-link>Approach</a>
+          <a href="#contact" data-section-link>Contact</a>
         </nav>
+
+        <div class="header-actions">
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color mode" aria-pressed="false">
+            <span class="theme-toggle-track">
+              <span class="theme-toggle-thumb"></span>
+            </span>
+            <span class="theme-toggle-label">Theme</span>
+          </button>
+          <a class="header-cta" href="#contact">Let&apos;s Talk</a>
+        </div>
       </div>
     </header>
 
-    <a class="floating-cta" href="#contact-form">Start a Project</a>
-
-    <main class="home-layout">
-      <section class="hero-fullbleed home-band" id="top">
-        <div class="hero page-wrap">
-          <div>
-            <span class="kicker"><%= siteData.brand.role %></span>
+    <main id="top">
+      <section class="hero-section">
+        <div class="page-wrap hero-grid">
+          <div class="hero-copy" data-reveal="up">
+            <span class="section-kicker"><%= siteData.hero.eyebrow %></span>
             <h1><%= siteData.hero.heading %></h1>
-            <p class="subline"><%= siteData.hero.subline %></p>
-            <p class="lead"><%= siteData.hero.intro %></p>
+            <p class="hero-subline"><%= siteData.hero.subline %></p>
+            <p class="hero-intro"><%= siteData.hero.intro %></p>
+
             <div class="hero-actions">
               <a class="btn primary" href="#contact"><%= siteData.hero.primaryCtaLabel %></a>
+              <a class="btn secondary" href="#work"><%= siteData.hero.secondaryCtaLabel %></a>
+            </div>
+
+            <div class="hero-highlights" aria-label="Primary focus areas">
+              <% siteData.hero.highlights.forEach((highlight) => { %>
+              <article class="hero-highlight">
+                <span></span>
+                <p><%= highlight %></p>
+              </article>
+              <% }) %>
             </div>
           </div>
-          <img class="hero-icon" src="<%= siteData.brand.logoIconPath %>" alt="<%= siteData.brand.name %> icon" />
+
+          <aside class="hero-showcase" data-reveal="up" data-delay="120">
+            <div class="hero-brand-card surface-card">
+              <span class="hero-card-label">Featured hero visual</span>
+              <img src="<%= siteData.hero.imagePath %>" alt="<%= siteData.hero.imageAlt %>" />
+              <div class="hero-card-badge">
+                <strong><%= siteData.hero.imageMetric %></strong>
+                <span><%= siteData.hero.imageMetricLabel %></span>
+              </div>
+            </div>
+
+            <div class="hero-meta-grid">
+              <% siteData.capabilities.forEach((item) => { %>
+              <article class="meta-card surface-card">
+                <span><%= item.title %></span>
+                <strong><%= item.description %></strong>
+              </article>
+              <% }) %>
+            </div>
+          </aside>
         </div>
       </section>
 
-      <section class="home-band info-band">
+      <section class="section-shell" id="services">
         <div class="page-wrap">
-          <div class="info-grid">
-            <% siteData.stats.forEach((stat) => { %>
-            <article class="stat-card">
-              <strong><%= stat.value %></strong>
-              <span><%= stat.label %></span>
-            </article>
-            <% }) %>
+          <div class="section-header" data-reveal="up">
+            <span class="section-kicker">Services</span>
+            <h2>Tailored digital solutions with cleaner structure and stronger presentation.</h2>
+            <p><%= siteData.servicesIntro %></p>
           </div>
-        </div>
-      </section>
 
-      <section class="home-band section-band services-band" id="services">
-        <section class="section page-wrap">
-          <h2>What I Build</h2>
-          <p class="section-intro">
-            Focused on practical outcomes: polished public websites, internal management dashboards,
-            and custom web apps with clear content and admin workflows.
-          </p>
           <div class="service-grid">
             <% siteData.services.forEach((service, index) => { %>
-            <article class="card service-card <%= index === 0 ? 'service-card-featured' : '' %>">
+            <article class="service-card surface-card" data-reveal="up">
+              <span class="service-index"><%= String(index + 1).padStart(2, "0") %></span>
               <h3><%= service.title %></h3>
               <p><%= service.description %></p>
+              <ul class="service-points">
+                <% service.deliverables.forEach((deliverable) => { %>
+                <li><%= deliverable %></li>
+                <% }) %>
+              </ul>
             </article>
             <% }) %>
           </div>
-        </section>
+        </div>
       </section>
 
-      <section class="home-band section-band projects-band" id="projects">
-        <section class="section page-wrap">
-          <h2>Selected Projects</h2>
-          <p class="section-intro">
-            Two examples that show both brand-facing design and operational web-app development.
-          </p>
+      <section class="section-shell" id="work">
+        <div class="page-wrap">
+          <div class="section-row" data-reveal="up">
+            <div class="section-header compact">
+              <span class="section-kicker">Portfolio</span>
+              <h2>Selected work.</h2>
+              <p><%= siteData.workIntro %></p>
+            </div>
+            <p class="section-side-note">Recent builds across brand presentation and internal operations.</p>
+          </div>
+
           <div class="project-grid">
-            <% siteData.projects.forEach((project, index) => { %>
-            <article class="card project-card project-card-detail <%= index % 2 === 1 ? 'project-card-reverse' : '' %>">
-              <div>
-                <h3>
-                  <a href="<%= project.url %>" target="_blank" rel="noopener noreferrer"><%= project.name %></a>
-                </h3>
-                <p><%= project.summary %></p>
+            <% siteData.projects.forEach((project) => { %>
+            <article class="project-card" data-reveal="up">
+              <div class="project-media surface-card">
+                <img src="<%= project.imagePath %>" alt="<%= project.imageAlt %>" loading="lazy" />
               </div>
-              <div class="project-detail-side">
-                <div class="meta">
+              <div class="project-body">
+                <div class="project-topline">
+                  <span class="project-category"><%= project.category %></span>
+                  <span class="project-year"><%= project.year %></span>
+                </div>
+                <h3><%= project.name %></h3>
+                <p class="project-summary"><%= project.summary %></p>
+                <p class="project-outcome">
+                  <span>Outcome</span>
+                  <strong><%= project.outcome %></strong>
+                </p>
+                <div class="project-tags">
                   <% project.tags.forEach((tag) => { %>
                   <span><%= tag %></span>
                   <% }) %>
                 </div>
-                <a class="btn secondary" href="<%= project.url %>" target="_blank" rel="noopener noreferrer">Visit Live Project</a>
               </div>
             </article>
             <% }) %>
           </div>
-        </section>
+        </div>
       </section>
 
-      <section class="home-band section-band process-band" id="process">
-        <section class="section page-wrap">
-          <h2>How I Work</h2>
-          <p class="section-intro">
-            A simple process built around clarity, speed, and predictable delivery.
-          </p>
-          <div class="process-grid">
-            <% siteData.processSteps.forEach((process, index) => { %>
-            <article class="card process-step <%= index % 2 === 1 ? 'process-offset' : '' %>">
-              <strong><%= process.step %></strong>
-              <h4><%= process.title %></h4>
+      <section class="section-shell approach-shell" id="approach">
+        <div class="page-wrap">
+          <div class="section-header centered" data-reveal="up">
+            <span class="section-kicker">Approach</span>
+            <h2>How the work gets built.</h2>
+            <p><%= siteData.approachIntro %></p>
+          </div>
+
+          <div class="process-track">
+            <% siteData.processSteps.forEach((process) => { %>
+            <article class="process-step" data-reveal="up">
+              <span class="process-index"><%= process.step %></span>
+              <h3><%= process.title %></h3>
               <p><%= process.description %></p>
             </article>
             <% }) %>
           </div>
-        </section>
+
+          <div class="principle-grid">
+            <% siteData.principles.forEach((principle) => { %>
+            <article class="principle-card surface-card" data-reveal="up">
+              <h3><%= principle.title %></h3>
+              <p><%= principle.description %></p>
+            </article>
+            <% }) %>
+          </div>
+        </div>
       </section>
 
-      <section class="home-band cta-section" id="contact">
+      <section class="section-shell contact-section" id="contact">
         <div class="page-wrap">
-          <section class="cta-band">
-            <div class="cta-copy">
-              <span class="kicker">Let's Build Something Useful</span>
-              <h3><%= siteData.contact.ctaTitle %></h3>
+          <div class="contact-shell">
+            <div class="contact-panel" data-reveal="up">
+              <span class="section-kicker dark">Contact</span>
+              <h2><%= siteData.contact.ctaTitle %></h2>
               <p><%= siteData.contact.ctaText %></p>
-              <div class="contact-links">
-                <p class="contact-direct">Email: <a href="mailto:<%= siteData.contact.email %>"><%= siteData.contact.email %></a></p>
-                <p class="contact-direct">Phone / WhatsApp: <a href="tel:+918697378521"><%= siteData.contact.phone %></a></p>
-                <p class="contact-direct">Fiverr: <a href="<%= siteData.contact.fiverrUrl %>" target="_blank" rel="noopener noreferrer"><%= siteData.contact.fiverrUsername %></a></p>
+
+              <div class="contact-direct">
+                <a class="contact-link" href="mailto:<%= siteData.contact.email %>">
+                  <span>Email</span>
+                  <strong><%= siteData.contact.email %></strong>
+                </a>
+                <a class="contact-link" href="<%= siteData.contact.phoneHref %>">
+                  <span>Phone / WhatsApp</span>
+                  <strong><%= siteData.contact.phone %></strong>
+                </a>
+                <a class="contact-link" href="<%= siteData.contact.fiverrUrl %>" target="_blank" rel="noopener noreferrer">
+                  <span>Fiverr</span>
+                  <strong>@<%= siteData.contact.fiverrUsername %></strong>
+                </a>
               </div>
+
+              <p class="contact-note">
+                <span><%= siteData.brand.location %></span>
+                <span><%= siteData.contact.responseTime %></span>
+              </p>
             </div>
-            <form class="contact-form" id="contact-form" method="post" action="/contact" novalidate>
+
+            <form class="contact-form surface-card" id="contact-form" method="post" action="/contact" novalidate data-reveal="up" data-delay="120">
               <div class="form-grid">
                 <label>
                   <span>Name</span>
@@ -166,51 +284,155 @@
                   <input type="email" name="email" autocomplete="email" required />
                 </label>
               </div>
+
               <div class="form-grid">
                 <label>
                   <span>Project Type</span>
                   <input type="text" name="projectType" placeholder="Website / Dashboard / Web App" required />
                 </label>
                 <label>
-                  <span>Budget (Optional)</span>
-                  <input type="text" name="budget" placeholder="INR 40k - 80k" />
+                  <span>Budget</span>
+                  <input type="text" name="budget" placeholder="Optional" />
                 </label>
               </div>
+
               <label>
-                <span>Timeline (Optional)</span>
-                <input type="text" name="timeline" placeholder="2-4 weeks" />
+                <span>Timeline</span>
+                <input type="text" name="timeline" placeholder="Optional" />
               </label>
+
               <label>
                 <span>Project Brief</span>
-                <textarea name="message" rows="5" placeholder="Share your goals, pages/features, and deadlines." required></textarea>
+                <textarea name="message" rows="6" placeholder="Share the goal, needed pages or features, and any deadline." required></textarea>
               </label>
+
               <label class="hp-field" aria-hidden="true">
                 <span>Website</span>
                 <input type="text" name="website" tabindex="-1" autocomplete="off" />
               </label>
+
               <button class="btn primary" type="submit"><%= siteData.contact.ctaLabel %></button>
               <p class="form-status" id="form-status" aria-live="polite"></p>
             </form>
-          </section>
-        </div>
-      </section>
-
-      <section class="home-band footer-band">
-        <div class="page-wrap">
-          <p class="footer-note"><%= siteData.brand.name %> - <%= siteData.brand.role %> Portfolio - <%= year %></p>
+          </div>
         </div>
       </section>
     </main>
+
+    <footer class="site-footer">
+      <div class="page-wrap footer-row">
+        <p><%= siteData.brand.name %> · <%= siteData.brand.role %></p>
+        <p>© <%= year %> Student Dev</p>
+      </div>
+    </footer>
+
     <script>
       (() => {
+        const body = document.body;
+        const root = document.documentElement;
+        const loader = document.getElementById("site-loader");
+        const scrollProgressBar = document.getElementById("scroll-progress-bar");
         const form = document.getElementById("contact-form");
         const statusEl = document.getElementById("form-status");
-        if (!form || !statusEl) return;
+        const themeToggle = document.getElementById("theme-toggle");
+        const siteHeader = document.querySelector(".site-header");
+        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+        const mediaQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: light)") : null;
+
+        const getPreferredTheme = () => {
+          const stored = window.localStorage.getItem("student-dev-theme");
+          if (stored === "light" || stored === "dark") return stored;
+          return mediaQuery?.matches ? "light" : "dark";
+        };
+
+        const applyTheme = (theme, persist = false) => {
+          root.dataset.theme = theme;
+          themeToggle?.setAttribute("aria-pressed", String(theme === "light"));
+          if (themeToggle) {
+            const label = themeToggle.querySelector(".theme-toggle-label");
+            if (label) {
+              label.textContent = theme === "light" ? "Light" : "Dark";
+            }
+          }
+          if (themeColorMeta) {
+            themeColorMeta.setAttribute("content", theme === "light" ? "#f3eee7" : "#07101d");
+          }
+          if (persist) {
+            window.localStorage.setItem("student-dev-theme", theme);
+          }
+        };
 
         const setStatus = (text, type) => {
           statusEl.textContent = text;
           statusEl.className = `form-status ${type || ""}`.trim();
         };
+
+        const updateScrollProgress = () => {
+          if (!scrollProgressBar) return;
+          const doc = document.documentElement;
+          const maxScroll = doc.scrollHeight - window.innerHeight;
+          const progress = maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0;
+          scrollProgressBar.style.transform = `scaleX(${progress})`;
+        };
+
+        const updateHeaderState = () => {
+          siteHeader?.classList.toggle("is-scrolled", window.scrollY > 12);
+        };
+
+        const revealItems = document.querySelectorAll("[data-reveal]");
+        const revealObserver =
+          "IntersectionObserver" in window
+            ? new IntersectionObserver(
+                (entries) => {
+                  entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    entry.target.classList.add("is-visible");
+                    revealObserver.unobserve(entry.target);
+                  });
+                },
+                { threshold: 0.14, rootMargin: "0px 0px -8% 0px" }
+              )
+            : null;
+
+        revealItems.forEach((item) => {
+          const delay = Number(item.dataset.delay || 0);
+          item.style.setProperty("--reveal-delay", `${delay}ms`);
+          if (revealObserver) {
+            revealObserver.observe(item);
+          } else {
+            item.classList.add("is-visible");
+          }
+        });
+
+        const closeLoader = () => {
+          window.setTimeout(() => {
+            body.classList.remove("is-loading");
+            body.classList.add("is-ready");
+            loader?.classList.add("is-hidden");
+            updateScrollProgress();
+            updateHeaderState();
+          }, 420);
+        };
+
+        window.addEventListener("scroll", updateScrollProgress, { passive: true });
+        window.addEventListener("scroll", updateHeaderState, { passive: true });
+        window.addEventListener("resize", updateScrollProgress);
+        window.addEventListener("load", closeLoader, { once: true });
+        applyTheme(getPreferredTheme());
+        updateScrollProgress();
+        updateHeaderState();
+
+        themeToggle?.addEventListener("click", () => {
+          const nextTheme = root.dataset.theme === "light" ? "dark" : "light";
+          applyTheme(nextTheme, true);
+        });
+
+        mediaQuery?.addEventListener("change", (event) => {
+          if (window.localStorage.getItem("student-dev-theme")) return;
+          applyTheme(event.matches ? "light" : "dark");
+        });
+
+        if (!form || !statusEl) return;
 
         form.addEventListener("submit", async (event) => {
           event.preventDefault();

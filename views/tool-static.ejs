@@ -1,0 +1,42 @@
+<%- include("partials/tools-head", {
+  pageTitle,
+  pageDescription,
+  pageKeywords,
+  canonicalUrl,
+  ogImageUrl,
+  siteData,
+  assetRoutes,
+  needsPdfLib: false,
+  structuredDataJson
+}) %>
+<%- include("partials/tools-header", { siteData, assetRoutes, toolsCategories }) %>
+
+    <main class="tools-main">
+      <section class="static-hero">
+        <div class="page-wrap">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="/tools">Tools</a>
+            <span>/</span>
+            <span><%= page.title %></span>
+          </nav>
+          <div class="static-hero__copy">
+            <span class="eyebrow">Student Dev Tools</span>
+            <h1><%= page.title %></h1>
+            <p><%= page.intro || page.seoDescription %></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-shell">
+        <div class="page-wrap static-content">
+          <% page.sections.forEach((section) => { %>
+          <article class="surface-card static-block">
+            <h2><%= section.title %></h2>
+            <p><%= section.body %></p>
+          </article>
+          <% }) %>
+        </div>
+      </section>
+    </main>
+
+<%- include("partials/tools-footer", { siteData, assetRoutes, toolsCategories, year }) %>

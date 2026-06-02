@@ -1,0 +1,44 @@
+    <footer class="tools-footer">
+      <div class="page-wrap tools-footer__grid">
+        <div class="tools-footer__intro">
+          <div class="tools-footer__brand">
+            <img src="<%= assetRoutes.logoIcon %>" alt="" />
+            <strong>Student Dev Tools</strong>
+          </div>
+          <p>Focused utility pages for repeated image, PDF, QR, and developer workflows.</p>
+        </div>
+
+        <div>
+          <h2>Categories</h2>
+          <ul>
+            <% toolsCategories.forEach((categoryItem) => { %>
+            <li><a href="<%= categoryItem.path %>"><%= categoryItem.name %></a></li>
+            <% }) %>
+          </ul>
+        </div>
+
+        <div>
+          <h2>Platform</h2>
+          <ul>
+            <li><a href="/about-tools">About Tools</a></li>
+            <li><a href="/privacy">Privacy Policy</a></li>
+            <li><a href="/terms">Terms of Service</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h2>Student Dev</h2>
+          <ul>
+            <li><a href="/">Portfolio</a></li>
+            <li><a href="/#contact">Contact</a></li>
+            <li><a href="<%= siteData.contact.fiverrUrl %>" rel="noreferrer" target="_blank">Fiverr</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="page-wrap tools-footer__meta">
+        <p>Privacy notes are shown on each tool page so the processing model is clear.</p>
+        <p>&copy; <%= year %> Student Dev</p>
+      </div>
+    </footer>
+  </body>
+</html>

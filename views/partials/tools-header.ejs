@@ -1,0 +1,29 @@
+    <header class="tools-header">
+      <div class="page-wrap tools-header__row">
+        <a class="tools-brand" href="/tools" aria-label="Student Dev Tools home">
+          <img src="<%= assetRoutes.logoIcon %>" alt="<%= siteData.brand.name %> logo" />
+          <div class="tools-brand__copy">
+            <strong>Student Dev Tools</strong>
+            <span>No-login micro tools</span>
+          </div>
+        </a>
+
+        <nav class="tools-nav" id="tools-nav" aria-label="Tool categories">
+          <a href="/tools" data-tools-nav-link>All Tools</a>
+          <% toolsCategories.forEach((categoryItem) => { %>
+          <a href="<%= categoryItem.path %>" data-tools-nav-link><%= categoryItem.name %></a>
+          <% }) %>
+          <a href="/about-tools" data-tools-nav-link>About</a>
+        </nav>
+
+        <div class="tools-header__actions">
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color mode" aria-pressed="false">
+            <span class="theme-toggle-track">
+              <span class="theme-toggle-thumb"></span>
+            </span>
+            <span class="theme-toggle-label">Theme</span>
+          </button>
+          <a class="tools-header__link" href="/" data-tools-nav-link>Portfolio</a>
+        </div>
+      </div>
+    </header>

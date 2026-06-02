@@ -1,102 +1,150 @@
 const siteData = {
   brand: {
     name: "Debajit Shil",
-    role: "Student Developer",
+    role: "Website and Web App Developer",
+    location: "Kolkata, India",
     logoIconPath: "/brand/logo-icon",
     logoWidePath: "/brand/logo-dark"
   },
   seo: {
-    title: "Debajit Shil | Student Developer",
+    siteName: "Student Dev",
+    title: "Student Dev | Debajit Shil - Website and Web App Developer",
     description:
-      "Student developer building professional websites, dashboards, and custom web applications at affordable pricing.",
+      "Student Dev is the portfolio of Debajit Shil, building professional websites, dashboards, and custom web applications with a minimal, polished, and SEO-aware approach.",
     keywords:
-      "student developer, web developer india, affordable website developer, custom web app developer, dashboard development, freelance web developer",
-    ogImagePath: "/brand/logo-light"
+      "student dev, debajit shil, website developer india, dashboard developer, custom web app developer, freelance web developer",
+    ogImagePath: "/brand/logo-dark"
   },
   hero: {
-    heading: "Professional Websites and Web Apps at Affordable Pricing",
-    subline: "Clean systems. Clear communication. Reliable delivery.",
+    eyebrow: "Student Dev • Available for focused freelance work",
+    heading: "Minimal, professional web products for brands and internal teams.",
+    subline:
+      "I design and build websites, dashboards, and internal tools that stay clear, fast, and maintainable after launch.",
     intro:
-      "I am a student developer who builds practical websites and web applications that clients can manage easily. If you need a modern website, dashboard, or custom web app without agency-level pricing, I can help.",
-    primaryCtaLabel: "Start a Project"
+      "The goal is simple: deliver a stronger front-end impression and a cleaner product underneath without turning the process into agency-style noise.",
+    imagePath: "/assests/hero-stitch-remote.png",
+    imageAlt: "Minimal desk setup with a laptop, pencils, and books",
+    imageMetric: "99.9%",
+    imageMetricLabel: "Performance score",
+    primaryCtaLabel: "Start a Project",
+    secondaryCtaLabel: "Selected Work",
+    highlights: [
+      "Portfolio websites with stronger positioning",
+      "Dashboards built around real workflows",
+      "Custom web apps with clean implementation"
+    ]
   },
-  stats: [
+  capabilities: [
     {
-      value: "2+",
-      label: "Production projects highlighted with real business use-cases"
+      title: "Websites",
+      description: "Professional marketing and portfolio websites with stronger hierarchy, SEO foundations, and a calmer visual system."
     },
     {
-      value: "End-to-End",
-      label: "From visual direction to admin-ready, maintainable systems"
+      title: "Dashboards",
+      description: "Operational interfaces that make reporting, management, and internal processes easier to use without clutter."
     },
     {
-      value: "Affordable",
-      label: "Custom development without high agency overhead"
+      title: "Custom Tools",
+      description: "Purpose-built internal products designed around the exact workflow instead of a generic template."
     }
   ],
+  servicesIntro:
+    "Each engagement stays focused on practical outcomes: better messaging on the surface, clearer systems underneath, and a handoff that does not create future friction.",
   services: [
     {
-      title: "Business Websites",
+      title: "Business & Portfolio Websites",
       description:
-        "Conversion-focused websites with premium visual identity and clear content structure for your clients."
+        "Professional websites with sharper positioning, cleaner UI, responsive layouts, and a structure that supports SEO from the start.",
+      deliverables: ["Content structure", "Responsive UI", "Performance-minded build"]
     },
     {
       title: "Dashboards & Admin Panels",
       description:
-        "Back-office interfaces for managing content, users, and operations without developer dependency."
+        "Back-office products that reduce day-to-day friction and keep complex workflows readable for the people actually using them.",
+      deliverables: ["Task-focused flows", "Role-aware interfaces", "Clean information hierarchy"]
     },
     {
       title: "Custom Web Applications",
       description:
-        "Full-stack web apps designed around your real workflow, with maintainable architecture."
+        "Lean internal SaaS tools and workflow systems with maintainable architecture, clear states, and room to grow after launch.",
+      deliverables: ["Tailored feature planning", "Maintainable implementation", "Launch-ready delivery"]
     }
   ],
+  workIntro:
+    "Two recent projects that show both ends of the work: polished public-facing design and heavier internal product systems.",
   projects: [
     {
-      name: "Vivartana.com",
+      name: "Cadeus.in",
+      year: "2026",
+      category: "Brand Website",
+      imagePath: "/assests/work-cadeus.png",
+      imageAlt: "CADEUS antifragility consulting website preview",
       summary:
-        "Portfolio website with a custom admin panel to keep content updates smooth while preserving a curated premium look.",
-      tags: ["Portfolio Site", "Custom Admin", "Content Control"],
-      url: "https://vivartana.com"
+        "A structured boutique consulting website for organisations and individuals navigating stress, with a clear first-screen narrative and dedicated paths for antifragility, restoration, neuro consulting, and advocacy.",
+      outcome: "A focused consulting presence that turns a complex five-service model into a clear, credible path for engagement.",
+      tags: ["Brand Website", "Responsive Build", "Content Structure"]
     },
     {
       name: "Margawellness.in",
+      year: "2026",
+      category: "Operations Dashboard",
+      imagePath: "/assests/work-marga.png",
+      imageAlt: "Margawellness dashboard preview",
       summary:
-        "Full management web app for a mental health organization, supporting practical internal workflows and day-to-day operations.",
-      tags: ["Web App", "Operations", "Healthcare Org"],
-      url: "https://margawellness.in"
+        "An internal system for appointments, reporting, finance, and staff operations, designed to keep day-to-day work readable inside one interface.",
+      outcome: "A more usable internal workflow with clearer reporting views and less operational fragmentation.",
+      tags: ["Dashboard", "Reporting", "Internal SaaS"]
+    }
+  ],
+  approachIntro:
+    "The work is intentionally restrained. The point is not decoration. The point is clarity, control, and fewer decisions left unresolved during build.",
+  principles: [
+    {
+      title: "Minimal by default",
+      description: "Every screen should make the next action obvious and remove avoidable visual noise."
+    },
+    {
+      title: "Concrete communication",
+      description: "Scope, decisions, and tradeoffs are written clearly so the project stays predictable."
+    },
+    {
+      title: "Built for handoff",
+      description: "The finished product should be maintainable, extendable, and usable without constant developer support."
     }
   ],
   processSteps: [
     {
-      step: "Step 01",
-      title: "Requirement Clarity",
-      description: "Understand business goals, users, and feature priorities."
+      step: "01",
+      title: "Align",
+      description: "Clarify the goal, the audience, and the non-negotiables before the interface starts taking shape."
     },
     {
-      step: "Step 02",
-      title: "Structure & UI Direction",
-      description: "Define layout and interaction decisions before heavy development."
+      step: "02",
+      title: "Design the system",
+      description: "Set the visual direction, page structure, and interaction rhythm with a minimal, consistent language."
     },
     {
-      step: "Step 03",
-      title: "Build & Integrate",
-      description: "Develop pages and systems with practical and maintainable structure."
+      step: "03",
+      title: "Build carefully",
+      description: "Develop the product with maintainable structure, responsive behavior, and practical implementation choices."
     },
     {
-      step: "Step 04",
-      title: "Launch & Handover",
-      description: "Deploy cleanly and ensure your team can confidently manage the system."
+      step: "04",
+      title: "Launch cleanly",
+      description: "Deploy, verify, and hand over a system that can be managed with confidence after release."
     }
   ],
   contact: {
-    email: process.env.CONTACT_EMAIL || "margadev66@gmail.com",
+    email: process.env.CONTACT_EMAIL || "services@student-dev.in",
     phone: process.env.CONTACT_PHONE || "+91 8697378521",
+    phoneHref: `tel:${(process.env.CONTACT_PHONE || "+91 8697378521").replace(/\s+/g, "")}`,
     fiverrUsername: process.env.FIVERR_USERNAME || "appr_radio",
     fiverrUrl: process.env.FIVERR_URL || "https://www.fiverr.com/appr_radio",
-    ctaTitle: "Need a modern website, dashboard, or custom web app?",
-    ctaText: "Send your scope and timeline, and I will reply with a clear execution plan.",
-    ctaLabel: "Send Inquiry"
+    ctaTitle: "Let’s build something cleaner, sharper, and easier to use.",
+    ctaText:
+      "Send the scope, timeline, or even a rough brief. I will reply with a direct next step instead of a vague pitch.",
+    ctaLabel: "Send Inquiry",
+    responseTime: "Usually replies within 24 hours on business days."
   }
 };
 

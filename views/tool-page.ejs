@@ -1,0 +1,779 @@
+<%- include("partials/tools-head", {
+  pageTitle,
+  pageDescription,
+  pageKeywords,
+  canonicalUrl,
+  ogImageUrl,
+  siteData,
+  assetRoutes,
+  needsPdfLib,
+  structuredDataJson
+}) %>
+<%- include("partials/tools-header", { siteData, assetRoutes, toolsCategories }) %>
+
+    <main class="tools-main">
+      <section class="tool-hero">
+        <div class="page-wrap">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="/tools">Tools</a>
+            <span>/</span>
+            <a href="<%= tool.categoryPath %>"><%= tool.categoryData.name %></a>
+            <span>/</span>
+            <span><%= tool.name %></span>
+          </nav>
+
+          <div class="tool-hero__grid">
+            <div class="tool-hero__copy">
+              <span class="eyebrow"><%= tool.heroEyebrow %></span>
+              <h1><%= tool.h1 %></h1>
+              <p class="tool-hero__intro"><%= tool.intro %></p>
+
+              <div class="promise-row">
+                <% tool.promises.forEach((promise) => { %>
+                <span class="promise-pill"><%= promise %></span>
+                <% }) %>
+              </div>
+            </div>
+
+            <aside class="surface-card tool-hero__aside">
+              <span class="surface-card__eyebrow">Page profile</span>
+              <div class="tool-profile-grid">
+                <article>
+                  <span>Category</span>
+                  <strong><%= tool.categoryData.name %></strong>
+                </article>
+                <article>
+                  <span>Processing</span>
+                  <strong><%= tool.processingMode === "browser" ? "Browser-side" : "Server-assisted" %></strong>
+                </article>
+                <article>
+                  <span>Format</span>
+                  <strong><%= tool.type.toUpperCase() %></strong>
+                </article>
+                <article>
+                  <span>Related</span>
+                  <strong><%= tool.relatedTools.length %> pages</strong>
+                </article>
+              </div>
+              <p>
+                Built for direct intent searches like "<%= tool.targetKeyword %>" with the working tool interface placed above the fold.
+              </p>
+              <div class="tool-hero__aside-actions">
+                <a class="button button--secondary" href="<%= tool.categoryPath %>">Open category</a>
+                <a class="text-link" href="/about-tools">How the platform works</a>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-shell section-shell--tight">
+        <div class="page-wrap tool-content-grid">
+          <div class="tool-main-column">
+          <article class="tool-workspace surface-card" data-tool-type="<%= tool.type %>" data-tool-mode="<%= tool.mode || '' %>">
+            <div class="tool-workspace__header">
+              <div>
+                <span class="surface-card__eyebrow"><%= tool.targetKeyword %></span>
+                <h2><%= tool.name %></h2>
+                <p><%= tool.helperText %></p>
+              </div>
+              <div class="tool-meta-strip">
+                <span class="chip"><%= tool.categoryData.name %></span>
+                <span class="chip"><%= tool.processingMode === "browser" ? "Browser processing" : "Instant output" %></span>
+                <span class="chip"><%= tool.type.toUpperCase() %></span>
+              </div>
+            </div>
+
+            <% if (tool.type === "image" && tool.mode !== "heic-to-jpg" && tool.mode !== "background-remover") { %>
+            <div class="tool-ui image-ui">
+              <div class="tool-grid-two">
+                <div class="uploader-panel">
+                  <label class="dropzone" for="image-file">
+                    <input id="image-file" type="file" accept="<%= tool.accept %>" />
+                    <strong>Select image</strong>
+                    <span>JPG, PNG, or WebP up to <%= tool.maxFileSizeLabel %></span>
+                  </label>
+
+                  <div class="control-stack">
+                    <% if (tool.targetKB) { %>
+                    <div class="preset-banner">
+                      <strong>Target preset</strong>
+                      <span><%= tool.targetKB %>KB best-effort export</span>
+                    </div>
+                    <% } %>
+
+                    <% if (tool.supportsDimensions) { %>
+                    <div class="control-row">
+                      <label>
+                        <span>Width</span>
+                        <input id="image-width" type="number" min="1" placeholder="Auto" />
+                      </label>
+                      <label>
+                        <span>Height</span>
+                        <input id="image-height" type="number" min="1" placeholder="Auto" />
+                      </label>
+                    </div>
+                    <% } %>
+
+                    <% if (tool.supportsFormatSwitch) { %>
+                    <label>
+                      <span>Output format</span>
+                      <select id="image-format">
+                        <option value="image/jpeg" <%= tool.outputFormat === "image/jpeg" ? "selected" : "" %>>JPEG</option>
+                        <option value="image/png" <%= tool.outputFormat === "image/png" ? "selected" : "" %>>PNG</option>
+                        <option value="image/webp" <%= tool.outputFormat === "image/webp" ? "selected" : "" %>>WebP</option>
+                      </select>
+                    </label>
+                    <% } %>
+
+                    <label>
+                      <span>Quality <strong id="image-quality-value">0.82</strong></span>
+                      <input id="image-quality" type="range" min="0.4" max="0.95" step="0.01" value="0.82" />
+                    </label>
+
+                    <div class="button-row">
+                      <button class="button button--primary" id="image-process" type="button">Process image</button>
+                      <button class="button button--ghost" id="image-reset" type="button">Reset</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="result-panel">
+                  <div class="preview-stack">
+                    <div class="preview-card">
+                      <span>Original</span>
+                      <div class="preview-card__box">
+                        <img id="image-original-preview" alt="" hidden />
+                        <p id="image-original-empty">Upload an image to preview the original file.</p>
+                      </div>
+                      <p id="image-original-meta">No file selected yet.</p>
+                    </div>
+
+                    <div class="preview-card">
+                      <span>Processed</span>
+                      <div class="preview-card__box">
+                        <img id="image-result-preview" alt="" hidden />
+                        <p id="image-result-empty">The processed image will appear here.</p>
+                      </div>
+                      <p id="image-result-meta">No processed file yet.</p>
+                    </div>
+                  </div>
+
+                  <div class="button-row">
+                    <a class="button button--secondary is-disabled" id="image-download" href="#" download>Download result</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+
+            <% if (tool.type === "image-batch") { %>
+            <div class="tool-ui image-ui">
+              <div class="tool-grid-two">
+                <div class="uploader-panel">
+                  <label class="dropzone" for="image-batch-input">
+                    <input id="image-batch-input" type="file" accept="image/png,image/jpeg,image/webp" multiple />
+                    <strong>Select multiple images</strong>
+                    <span>JPG, PNG, or WebP files up to 20MB each</span>
+                  </label>
+
+                  <div class="control-stack">
+                    <label>
+                      <span>Batch quality <strong id="image-batch-quality-value">0.76</strong></span>
+                      <input id="image-batch-quality" type="range" min="0.35" max="0.95" step="0.01" value="0.76" />
+                    </label>
+                    <div class="button-row">
+                      <button class="button button--primary" id="image-batch-run" type="button">Compress batch</button>
+                      <button class="button button--ghost" id="image-batch-reset" type="button">Reset</button>
+                    </div>
+                    <div class="file-list" id="image-batch-list">
+                      <p class="file-list__empty">No images added yet.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="result-panel">
+                  <div class="preview-card preview-card--tall">
+                    <span>Batch output</span>
+                    <div class="preview-card__box preview-card__box--centered">
+                      <p id="image-batch-status">Add multiple images to compress them together.</p>
+                    </div>
+                  </div>
+                  <div class="file-list" id="image-batch-result-list">
+                    <p class="file-list__empty">Compressed files will appear here.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+
+            <% if (tool.type === "image" && tool.mode === "heic-to-jpg") { %>
+            <div class="tool-ui image-ui">
+              <div class="tool-grid-two">
+                <div class="uploader-panel">
+                  <label class="dropzone" for="heic-input">
+                    <input id="heic-input" type="file" accept=".heic,.HEIC" multiple />
+                    <strong>Select HEIC files</strong>
+                    <span>Upload HEIC images and convert them into JPG files.</span>
+                  </label>
+                  <div class="button-row">
+                    <button class="button button--primary" id="heic-run" type="button">Convert to JPG</button>
+                  </div>
+                  <div class="file-list" id="heic-file-list">
+                    <p class="file-list__empty">No HEIC files added yet.</p>
+                  </div>
+                </div>
+                <div class="result-panel">
+                  <div class="preview-card preview-card--tall">
+                    <span>Conversion output</span>
+                    <div class="preview-card__box preview-card__box--centered">
+                      <p id="heic-status">Converted JPG files will appear in the list below.</p>
+                    </div>
+                  </div>
+                  <div class="file-list" id="heic-result-list">
+                    <p class="file-list__empty">No converted files yet.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+
+            <% if (tool.type === "image" && tool.mode === "background-remover") { %>
+            <div class="tool-ui image-ui">
+              <div class="tool-grid-two">
+                <div class="uploader-panel">
+                  <label class="dropzone" for="background-removal-input">
+                    <input id="background-removal-input" type="file" accept="<%= tool.accept %>" />
+                    <strong>Select image</strong>
+                    <span>JPG, PNG, or WebP up to <%= tool.maxFileSizeLabel %></span>
+                  </label>
+
+                  <div class="control-stack">
+                    <label>
+                      <span>Output format</span>
+                      <select id="background-removal-format">
+                        <option value="image/png">PNG with transparency</option>
+                        <option value="image/webp">WebP with transparency</option>
+                      </select>
+                    </label>
+
+                    <div class="button-row">
+                      <button class="button button--primary" id="background-removal-run" type="button">Remove background</button>
+                      <button class="button button--ghost" id="background-removal-reset" type="button">Reset</button>
+                    </div>
+
+                    <p id="background-removal-status" class="status-line">Upload an image to start the background removal process.</p>
+                  </div>
+                </div>
+
+                <div class="result-panel">
+                  <div class="preview-stack">
+                    <div class="preview-card">
+                      <span>Original</span>
+                      <div class="preview-card__box">
+                        <img id="background-removal-original" alt="" hidden />
+                        <p id="background-removal-original-empty">Preview the original image here.</p>
+                      </div>
+                    </div>
+
+                    <div class="preview-card">
+                      <span>Background removed</span>
+                      <div class="preview-card__box preview-card__box--checker">
+                        <img id="background-removal-result" alt="" hidden />
+                        <p id="background-removal-result-empty">The transparent result will appear here.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="button-row">
+                    <a class="button button--secondary is-disabled" id="background-removal-download" href="#" download>Download result</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+
+            <% if (tool.type === "qr") { %>
+            <div class="tool-ui qr-ui">
+              <div class="tool-grid-two">
+                <div class="control-stack">
+                  <% if (!tool.mode || tool.mode === "generic") { %>
+                  <label>
+                    <span>Content type</span>
+                    <select id="qr-kind">
+                      <option value="url">URL</option>
+                      <option value="text">Text</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>Content</span>
+                    <textarea id="qr-content" rows="6" placeholder="Paste the URL or text here"></textarea>
+                  </label>
+                  <% } %>
+
+                  <% if (tool.mode === "wifi") { %>
+                  <label>
+                    <span>Wi-Fi name</span>
+                    <input id="qr-wifi-ssid" type="text" placeholder="Network name" />
+                  </label>
+                  <label>
+                    <span>Password</span>
+                    <input id="qr-wifi-password" type="text" placeholder="Network password" />
+                  </label>
+                  <label>
+                    <span>Security</span>
+                    <select id="qr-wifi-security">
+                      <option value="WPA">WPA/WPA2</option>
+                      <option value="WEP">WEP</option>
+                      <option value="nopass">No password</option>
+                    </select>
+                  </label>
+                  <% } %>
+
+                  <% if (tool.mode === "whatsapp") { %>
+                  <label>
+                    <span>Phone number</span>
+                    <input id="qr-whatsapp-phone" type="text" placeholder="919876543210" />
+                  </label>
+                  <label>
+                    <span>Prefilled message</span>
+                    <textarea id="qr-whatsapp-message" rows="5" placeholder="Hello, I found your number on the site."></textarea>
+                  </label>
+                  <% } %>
+
+                  <label>
+                    <span>Output size</span>
+                    <select id="qr-size">
+                      <option value="256">256 x 256</option>
+                      <option value="512">512 x 512</option>
+                      <option value="768">768 x 768</option>
+                    </select>
+                  </label>
+
+                  <div class="button-row">
+                    <button class="button button--primary" id="qr-generate" type="button">Generate QR</button>
+                  </div>
+                </div>
+
+                <div class="result-panel">
+                  <div class="preview-card preview-card--tall">
+                    <span>Preview</span>
+                    <div class="preview-card__box preview-card__box--centered" id="qr-preview-box">
+                      <p id="qr-preview-empty">Generate a QR code to preview the output here.</p>
+                    </div>
+                    <p id="qr-result-meta">PNG and SVG downloads will appear after generation.</p>
+                  </div>
+                  <div class="button-row">
+                    <a class="button button--secondary is-disabled" id="qr-download-png" href="#" download>Download PNG</a>
+                    <a class="button button--ghost is-disabled" id="qr-download-svg" href="#" download>Download SVG</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+
+            <% if (tool.type === "dev") { %>
+            <div class="tool-ui dev-ui">
+              <div class="tool-grid-two">
+                <div class="control-stack">
+                  <% if (tool.mode === "regex") { %>
+                  <div class="control-row">
+                    <label>
+                      <span>Regex pattern</span>
+                      <input id="regex-pattern" type="text" placeholder="e.g. \\b[A-Z]{2,}\\b" />
+                    </label>
+                    <label>
+                      <span>Flags</span>
+                      <input id="regex-flags" type="text" placeholder="gim" />
+                    </label>
+                  </div>
+                  <% } %>
+                  <% if (tool.mode === "base64") { %>
+                  <div class="toggle-row">
+                    <button class="segmented-button is-active" data-dev-direction="encode" type="button">Encode</button>
+                    <button class="segmented-button" data-dev-direction="decode" type="button">Decode</button>
+                  </div>
+                  <% } %>
+                  <% if (tool.mode === "url-encode") { %>
+                  <div class="toggle-row">
+                    <button class="segmented-button is-active" data-dev-direction="encode" type="button">Encode</button>
+                    <button class="segmented-button" data-dev-direction="decode" type="button">Decode</button>
+                  </div>
+                  <% } %>
+                  <label>
+                    <span><%= tool.inputLabel %></span>
+                    <textarea id="dev-input" rows="<%= tool.mode === 'youtube-transcript' ? 6 : 16 %>" placeholder="Paste the source content here"></textarea>
+                  </label>
+                  <div class="button-row">
+                    <button class="button button--primary" id="dev-run" type="button"><%= tool.mode === "youtube-transcript" ? "Fetch transcript" : "Run tool" %></button>
+                    <button class="button button--ghost" id="dev-clear" type="button">Clear</button>
+                  </div>
+                </div>
+
+                <div class="result-panel">
+                  <% if (tool.mode === "markdown") { %>
+                  <div class="preview-card preview-card--tall">
+                    <span>Live preview</span>
+                    <div class="preview-card__box markdown-preview" id="markdown-preview">
+                      <p>Rendered markdown will appear here.</p>
+                    </div>
+                  </div>
+                  <% } %>
+                  <label class="<%= tool.mode === 'markdown' ? 'is-secondary-output' : '' %>">
+                    <span><%= tool.outputLabel %></span>
+                    <textarea id="dev-output" rows="16" readonly placeholder="Output will appear here"></textarea>
+                  </label>
+                  <div class="button-row">
+                    <button class="button button--secondary" id="dev-copy" type="button">Copy output</button>
+                    <a class="button button--ghost" id="dev-download" href="#" download>Download</a>
+                  </div>
+                  <p id="dev-status" class="status-line">Ready.</p>
+                </div>
+              </div>
+            </div>
+            <% } %>
+
+            <% if (tool.type === "ai") { %>
+            <div class="tool-ui ai-ui">
+              <div class="tool-grid-two">
+                <div class="control-stack">
+                  <% if (tool.imageInput) { %>
+                  <label class="dropzone" for="ai-image-input">
+                    <input id="ai-image-input" type="file" accept="<%= tool.accept %>" />
+                    <strong>Select image</strong>
+                    <span>Upload one image for the AI analysis step.</span>
+                  </label>
+                  <% } %>
+
+                  <% if (tool.secondaryLabel) { %>
+                  <label>
+                    <span><%= tool.secondaryLabel %></span>
+                    <input id="ai-secondary" type="text" placeholder="<%= tool.secondaryPlaceholder %>" />
+                  </label>
+                  <% } %>
+
+                  <label>
+                    <span><%= tool.inputLabel %></span>
+                    <textarea id="ai-input" rows="<%= tool.imageInput ? 8 : 16 %>" placeholder="<%= tool.inputPlaceholder || 'Paste the source content here' %>"></textarea>
+                  </label>
+
+                  <div class="button-row">
+                    <button class="button button--primary" id="ai-run" type="button"><%= tool.actionLabel || 'Generate output' %></button>
+                    <button class="button button--ghost" id="ai-clear" type="button">Clear</button>
+                  </div>
+
+                  <p id="ai-status" class="status-line">Ready.</p>
+                </div>
+
+                <div class="result-panel">
+                  <% if (tool.imageInput) { %>
+                  <div class="preview-card">
+                    <span>Image preview</span>
+                    <div class="preview-card__box">
+                      <img id="ai-image-preview" alt="" hidden />
+                      <p id="ai-image-empty">The uploaded image will appear here.</p>
+                    </div>
+                  </div>
+                  <% } %>
+
+                  <label>
+                    <span><%= tool.outputLabel %></span>
+                    <textarea id="ai-output" rows="16" readonly placeholder="Generated output will appear here"></textarea>
+                  </label>
+
+                  <div class="button-row">
+                    <button class="button button--secondary" id="ai-copy" type="button">Copy output</button>
+                    <a class="button button--ghost is-disabled" id="ai-download" href="#" download>Download</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+
+            <% if (tool.type === "pdf" && tool.mode === "merge") { %>
+            <div class="tool-ui pdf-ui">
+              <div class="tool-grid-two">
+                <div class="control-stack">
+                  <label class="dropzone" for="pdf-file-input">
+                    <input id="pdf-file-input" type="file" accept="application/pdf" multiple />
+                    <strong>Select PDF files</strong>
+                    <span>Choose multiple PDFs, then move them into the right order.</span>
+                  </label>
+                  <div class="file-list" id="pdf-file-list">
+                    <p class="file-list__empty">No PDF files added yet.</p>
+                  </div>
+                  <div class="button-row">
+                    <button class="button button--primary" id="pdf-merge-run" type="button">Merge PDFs</button>
+                  </div>
+                </div>
+
+                <div class="result-panel">
+                  <div class="preview-card preview-card--tall">
+                    <span>Output</span>
+                    <div class="preview-card__box preview-card__box--centered">
+                      <p id="pdf-merge-status">Add files and merge them to create a single PDF.</p>
+                    </div>
+                  </div>
+                  <div class="button-row">
+                    <a class="button button--secondary is-disabled" id="pdf-merge-download" href="#" download>Download merged PDF</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+
+            <% if (tool.type === "pdf" && tool.mode === "jpg-to-pdf") { %>
+            <div class="tool-ui pdf-ui">
+              <div class="tool-grid-two">
+                <div class="control-stack">
+                  <label class="dropzone" for="pdf-image-input">
+                    <input id="pdf-image-input" type="file" accept="image/png,image/jpeg" multiple />
+                    <strong>Select JPG or PNG files</strong>
+                    <span>Choose one or more images and keep the order you want in the output PDF.</span>
+                  </label>
+
+                  <label>
+                    <span>Page style</span>
+                    <select id="pdf-image-page-style">
+                      <option value="fit">Fit page to each image</option>
+                      <option value="a4">A4 portrait pages</option>
+                    </select>
+                  </label>
+
+                  <div class="file-list" id="pdf-image-list">
+                    <p class="file-list__empty">No images added yet.</p>
+                  </div>
+
+                  <div class="button-row">
+                    <button class="button button--primary" id="pdf-image-run" type="button">Create PDF</button>
+                  </div>
+                </div>
+
+                <div class="result-panel">
+                  <div class="preview-card preview-card--tall">
+                    <span>Output</span>
+                    <div class="preview-card__box preview-card__box--centered">
+                      <p id="pdf-image-status">Upload images to create a PDF file.</p>
+                    </div>
+                  </div>
+                  <div class="button-row">
+                    <a class="button button--secondary is-disabled" id="pdf-image-download" href="#" download>Download PDF</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+
+            <% if (tool.type === "pdf" && tool.mode === "pdf-to-word") { %>
+            <div class="tool-ui pdf-ui">
+              <div class="tool-grid-two">
+                <div class="control-stack">
+                  <label class="dropzone" for="pdf-to-word-input">
+                    <input id="pdf-to-word-input" type="file" accept="application/pdf" />
+                    <strong>Select one PDF file</strong>
+                    <span>Use a text-based PDF for the best `.docx` output.</span>
+                  </label>
+                  <div class="button-row">
+                    <button class="button button--primary" id="pdf-to-word-run" type="button">Convert to Word</button>
+                  </div>
+                </div>
+                <div class="result-panel">
+                  <div class="preview-card preview-card--tall">
+                    <span>Output</span>
+                    <div class="preview-card__box preview-card__box--centered">
+                      <p id="pdf-to-word-status">Upload a PDF to create a Word document.</p>
+                    </div>
+                  </div>
+                  <div class="button-row">
+                    <a class="button button--secondary is-disabled" id="pdf-to-word-download" href="#" download>Download `.docx`</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+
+            <% if (tool.type === "assets" && tool.mode === "icon-customizer") { %>
+            <div class="tool-ui assets-ui">
+              <div class="tool-grid-two">
+                <div class="control-stack">
+                  <label>
+                    <span>Icon</span>
+                    <select id="icon-customizer-name"></select>
+                  </label>
+                  <div class="control-row">
+                    <label>
+                      <span>Size</span>
+                      <input id="icon-customizer-size" type="number" min="16" max="512" value="96" />
+                    </label>
+                    <label>
+                      <span>Stroke width</span>
+                      <input id="icon-customizer-stroke" type="number" min="1" max="4" step="0.25" value="1.75" />
+                    </label>
+                  </div>
+                  <label>
+                    <span>Stroke color</span>
+                    <input id="icon-customizer-color" type="color" value="#d6b16a" />
+                  </label>
+                  <div class="button-row">
+                    <button class="button button--primary" id="icon-customizer-run" type="button">Render icon</button>
+                  </div>
+                </div>
+                <div class="result-panel">
+                  <div class="preview-card preview-card--tall">
+                    <span>Preview</span>
+                    <div class="preview-card__box preview-card__box--centered" id="icon-customizer-preview">
+                      <p>Select an icon and render it to preview the output.</p>
+                    </div>
+                  </div>
+                  <div class="button-row">
+                    <a class="button button--secondary is-disabled" id="icon-customizer-download-svg" href="#" download>Download SVG</a>
+                    <a class="button button--ghost is-disabled" id="icon-customizer-download-png" href="#" download>Download PNG</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+
+            <% if (tool.type === "assets" && tool.mode === "device-mockup") { %>
+            <div class="tool-ui assets-ui">
+              <div class="tool-grid-two">
+                <div class="control-stack">
+                  <label class="dropzone" for="device-mockup-input">
+                    <input id="device-mockup-input" type="file" accept="image/png,image/jpeg,image/webp" />
+                    <strong>Select a screenshot</strong>
+                    <span>Upload an image and place it inside a phone or browser-style frame.</span>
+                  </label>
+                  <div class="control-row">
+                    <label>
+                      <span>Frame style</span>
+                      <select id="device-mockup-frame">
+                        <option value="phone">Phone</option>
+                        <option value="browser">Browser</option>
+                      </select>
+                    </label>
+                    <label>
+                      <span>Background</span>
+                      <input id="device-mockup-background" type="color" value="#f5f0e6" />
+                    </label>
+                  </div>
+                  <div class="button-row">
+                    <button class="button button--primary" id="device-mockup-run" type="button">Create mockup</button>
+                  </div>
+                </div>
+                <div class="result-panel">
+                  <div class="preview-card preview-card--tall">
+                    <span>Preview</span>
+                    <div class="preview-card__box preview-card__box--centered" id="device-mockup-preview">
+                      <canvas id="device-mockup-canvas" width="900" height="700" hidden></canvas>
+                      <p id="device-mockup-empty">Your mockup preview will appear here.</p>
+                    </div>
+                  </div>
+                  <div class="button-row">
+                    <a class="button button--secondary is-disabled" id="device-mockup-download" href="#" download>Download PNG</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+          </article>
+            <section class="tool-content-section">
+              <div class="section-header section-header--compact">
+                <span class="eyebrow">How to use</span>
+                <h2>Three quick steps.</h2>
+              </div>
+              <div class="steps-grid">
+                <% tool.steps.forEach((step, index) => { %>
+                <article class="surface-card step-card">
+                  <span class="step-card__index"><%= index + 1 %></span>
+                  <h3><%= step.title %></h3>
+                  <p><%= step.body %></p>
+                </article>
+                <% }) %>
+              </div>
+            </section>
+
+            <section class="tool-content-section">
+              <div class="section-header section-header--compact">
+                <span class="eyebrow">FAQ</span>
+                <h2>Questions people usually ask before using this page.</h2>
+              </div>
+              <div class="faq-list">
+                <% tool.faq.forEach((item, index) => { %>
+                <article class="faq-item <%= index === 0 ? 'is-open' : '' %>" data-faq-item>
+                  <button class="faq-item__button" type="button" data-faq-button aria-expanded="<%= index === 0 ? 'true' : 'false' %>">
+                    <span><%= item.question %></span>
+                    <span class="faq-item__icon">+</span>
+                  </button>
+                  <div class="faq-item__answer" data-faq-answer>
+                    <p><%= item.answer %></p>
+                  </div>
+                </article>
+                <% }) %>
+              </div>
+            </section>
+
+            <% if (tool.relatedTools.length) { %>
+            <section class="tool-content-section">
+              <div class="section-row">
+                <div class="section-header section-header--compact">
+                  <span class="eyebrow">Related tools</span>
+                  <h2>Adjacent tasks in the same workflow.</h2>
+                </div>
+                <a class="text-link" href="<%= tool.categoryPath %>">See all <%= tool.categoryData.name.toLowerCase() %></a>
+              </div>
+
+              <div class="tool-grid">
+                <% tool.relatedTools.forEach((related) => { %>
+                <article class="surface-card tool-card">
+                  <div class="tool-card__meta">
+                    <span class="material-symbols-outlined"><%= related.icon %></span>
+                    <span><%= related.categoryData.name %></span>
+                  </div>
+                  <h3><%= related.name %></h3>
+                  <p><%= related.description %></p>
+                  <a class="text-link" href="<%= related.path %>">Open tool</a>
+                </article>
+                <% }) %>
+              </div>
+            </section>
+            <% } %>
+          </div>
+
+          <aside class="tool-side-column">
+            <article class="notice-panel aside-panel">
+              <div>
+                <span class="surface-card__eyebrow">Privacy note</span>
+                <h2><%= tool.processingMode === "browser" ? "Your input stays local." : "Server-assisted processing." %></h2>
+                <p>
+                  <% if (tool.processingMode === "browser") { %>
+                  This tool processes data in your browser, so your file or text stays on your device while the output is created.
+                  <% } else { %>
+                  This tool uses a lightweight server helper for the current request and does not keep a saved history.
+                  <% } %>
+                </p>
+              </div>
+            </article>
+
+            <%- include("partials/adsense-unit", { slot: "4626786192", className: "aside-panel" }) %>
+
+            <article class="surface-card aside-panel">
+              <span class="surface-card__eyebrow">Why use this page</span>
+              <h2>Focused on one exact task.</h2>
+              <ul class="aside-checklist">
+                <li>Designed around the search intent "<%= tool.targetKeyword %>".</li>
+                <li><%= tool.processingMode === "browser" ? "Prioritizes local processing when it is practical." : "Uses the lightest server-side flow needed for the result." %></li>
+                <li>Links directly into the next adjacent tool instead of trapping users in a broad suite.</li>
+              </ul>
+              <div class="aside-link-stack">
+                <a class="text-link" href="<%= tool.categoryPath %>">Browse <%= tool.categoryData.name.toLowerCase() %></a>
+                <a class="text-link" href="/about-tools">About Student Dev Tools</a>
+              </div>
+            </article>
+          </aside>
+        </div>
+      </section>
+
+      <script id="tool-config" type="application/json"><%- toolConfigJson %></script>
+    </main>
+
+<%- include("partials/tools-footer", { siteData, assetRoutes, toolsCategories, year }) %>

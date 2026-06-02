@@ -1,0 +1,100 @@
+<%- include("partials/tools-head", {
+  pageTitle,
+  pageDescription,
+  pageKeywords,
+  canonicalUrl,
+  ogImageUrl,
+  siteData,
+  assetRoutes,
+  needsPdfLib: false,
+  structuredDataJson
+}) %>
+<%- include("partials/tools-header", { siteData, assetRoutes, toolsCategories }) %>
+
+    <main class="tools-main">
+      <section class="category-hero">
+        <div class="page-wrap">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="/tools">Tools</a>
+            <span>/</span>
+            <span><%= category.name %></span>
+          </nav>
+
+          <div class="category-hero__grid">
+            <% const browserToolCount = category.tools.filter((tool) => tool.processingMode === "browser").length; %>
+            <% const serverToolCount = category.toolCount - browserToolCount; %>
+            <div>
+              <span class="eyebrow"><%= category.heroEyebrow %></span>
+              <h1><%= category.heroTitle %></h1>
+              <p class="category-hero__intro"><%= category.heroCopy %></p>
+            </div>
+            <aside class="surface-card category-hero__card">
+              <span class="surface-card__eyebrow">Category note</span>
+              <div class="category-hero__stats">
+                <article>
+                  <strong><%= category.toolCount %></strong>
+                  <span>Live tools</span>
+                </article>
+                <article>
+                  <strong><%= browserToolCount || serverToolCount %></strong>
+                  <span><%= browserToolCount ? "Browser-first" : "Server-assisted" %></span>
+                </article>
+              </div>
+              <p><%= category.description %></p>
+              <div class="category-hero__links">
+                <% category.tools.slice(0, 3).forEach((tool) => { %>
+                <a href="<%= tool.path %>">
+                  <strong><%= tool.name %></strong>
+                  <span><%= tool.processingMode === "browser" ? "Browser processing" : "Server-assisted" %></span>
+                </a>
+                <% }) %>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-shell">
+        <div class="page-wrap">
+          <div class="category-switcher">
+            <% toolsCategories.forEach((categoryItem) => { %>
+            <a class="chip-link <%= categoryItem.slug === category.slug ? 'is-active' : '' %>" href="<%= categoryItem.path %>">
+              <span class="material-symbols-outlined"><%= categoryItem.icon %></span>
+              <span><%= categoryItem.name %></span>
+            </a>
+            <% }) %>
+          </div>
+
+          <div class="section-row">
+            <div class="section-header section-header--compact">
+              <span class="eyebrow">Live tools</span>
+              <h2><%= category.name %> library.</h2>
+              <p>Open a focused page, finish the task, and move directly to the next related workflow from the same category.</p>
+            </div>
+            <div class="inline-search">
+              <label for="category-search">Search tools</label>
+              <input id="category-search" type="search" placeholder="Search this category" data-tool-search-input data-tool-search-target="category-grid" />
+            </div>
+          </div>
+
+          <div class="tool-grid" id="category-grid" data-tool-search-root>
+            <% category.tools.forEach((tool) => { %>
+            <article class="surface-card tool-card" data-tool-search-item data-tool-name="<%= tool.name.toLowerCase() %> <%= tool.targetKeyword.toLowerCase() %>">
+              <div class="tool-card__meta">
+                <span class="material-symbols-outlined"><%= tool.icon %></span>
+                <span><%= tool.processingMode === "browser" ? "Browser" : "Server helper" %></span>
+              </div>
+              <h3><%= tool.name %></h3>
+              <p><%= tool.description %></p>
+              <div class="chip-row">
+                <span class="chip"><%= tool.targetKeyword %></span>
+              </div>
+              <a class="text-link" href="<%= tool.path %>">Open tool</a>
+            </article>
+            <% }) %>
+          </div>
+        </div>
+      </section>
+    </main>
+
+<%- include("partials/tools-footer", { siteData, assetRoutes, toolsCategories, year }) %>

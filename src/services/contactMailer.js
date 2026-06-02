@@ -49,9 +49,9 @@ function createTransporter(config) {
       user: config.user,
       pass: config.pass
     },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 15000
+    connectionTimeout: 30000,
+    greetingTimeout: 30000,
+    socketTimeout: 30000
   });
 
   cachedTransportKey = key;
@@ -124,7 +124,68 @@ async function sendContactEmail(payload) {
   });
 }
 
+async function sendToolSuggestionEmail(payload) {
+  if (!isMailerConfigured()) {
+    const error = new Error("Mailer not configured");
+    error.code = "MAILER_NOT_CONFIGURED";
+    throw error;
+  }
+
+  const config = getMailerConfig();
+  const transporter = createTransporter(config);
+
+  const hasName = typeof payload.name === "string" && payload.name.trim().length > 0;
+  const hasEmail = typeof payload.email === "string" && payload.email.trim().length > 0;
+  const safeName = hasName ? toSingleLine(payload.name) : "Anonymous visitor";
+  const safeEmail = hasEmail ? toSingleLine(payload.email) : "Not provided";
+  const safeCategory = toSingleLine(payload.category || "Not specified");
+  const safeToolName = toSingleLine(payload.toolName);
+  const safeDetails = String(payload.details || "").trim();
+  const safeSource = toSingleLine(payload.sourcePage || "Not provided");
+
+  const subject = `Tool suggestion: ${safeToolName}`;
+
+  const text = [
+    "New public tool suggestion",
+    "",
+    `Suggested tool: ${safeToolName}`,
+    `Category: ${safeCategory}`,
+    `Name: ${safeName}`,
+    `Email: ${safeEmail}`,
+    `Submitted from: ${safeSource}`,
+    "",
+    "Details:",
+    safeDetails
+  ].join("\n");
+
+  const html = [
+    "<h2>New public tool suggestion</h2>",
+    `<p><strong>Suggested tool:</strong> ${escapeHtml(safeToolName)}</p>`,
+    `<p><strong>Category:</strong> ${escapeHtml(safeCategory)}</p>`,
+    `<p><strong>Name:</strong> ${escapeHtml(safeName)}</p>`,
+    `<p><strong>Email:</strong> ${escapeHtml(safeEmail)}</p>`,
+    `<p><strong>Submitted from:</strong> ${escapeHtml(safeSource)}</p>`,
+    `<p><strong>Details:</strong></p>`,
+    `<pre style="white-space:pre-wrap;font-family:inherit">${escapeHtml(safeDetails)}</pre>`
+  ].join("");
+
+  const mailOptions = {
+    from: config.from,
+    to: config.to,
+    subject,
+    text,
+    html
+  };
+
+  if (hasEmail) {
+    mailOptions.replyTo = toSingleLine(payload.email);
+  }
+
+  return transporter.sendMail(mailOptions);
+}
+
 module.exports = {
   isMailerConfigured,
-  sendContactEmail
+  sendContactEmail,
+  sendToolSuggestionEmail
 };
